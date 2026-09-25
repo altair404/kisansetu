@@ -33,7 +33,7 @@ function Dashboard({setPage}:{setPage:(p:Page)=>void}){return <div className="sp
 
 function QueueCard({setPage}:{setPage:(p:Page)=>void}){return <Card className="p-5"><div className="flex items-start justify-between"><div><div className="flex items-center gap-2"><Users size={19} className="text-green-700"/><h2 className="font-bold">Live Queue Status</h2></div><p className="mt-1 text-xs text-slate-500">Updated just now • auto-refreshing</p></div><Badge>Moving normally</Badge></div><div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl bg-slate-50 p-3"><p className="text-xs text-slate-500">Current token</p><p className="text-xl font-extrabold">#109</p></div><div className="rounded-xl bg-green-50 p-3"><p className="text-xs text-green-700">Your token</p><p className="text-xl font-extrabold text-green-800">#127</p></div></div><div className="mt-4"><div className="flex items-center justify-between text-xs"><span className="font-semibold text-slate-700">18 farmers ahead</span><span className="text-slate-500">45 min est.</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full w-[68%] rounded-full bg-green-600"/></div></div><div className="mt-4 flex flex-wrap gap-1.5">{queueData.slice(0,19).map(x=><span key={x.token} className={`flex h-7 w-7 items-center justify-center rounded-full text-[9px] font-bold ${x.current?'bg-amber-500 text-white':x.done?'bg-green-100 text-green-700':'bg-slate-100 text-slate-500'}`}>{x.token}</span>)}</div><div className="mt-4 flex gap-2"><Button variant="secondary" onClick={()=>setPage('queue')} icon={Users}>Track queue</Button><Button variant="ghost" icon={Bell}>Notify near turn</Button></div></Card>}
 
-function StatusTracker({setPage}:{setPage:(p:Page)=>void}){const stages=[['Registration Completed',true,'Your farmer registration is verified.'],['Token Generated',true,'Token #127 has been reserved.'],['Waiting for Procurement',true,'18 farmers are ahead of you.'],['Quality Verification',false,'Quality will be checked at the centre.'],['Weighing',false,'Weight will be recorded after verification.'],['Procurement Completed',false,'Procurement receipt will be generated.'],['Payment Processing',false,'Payment will be initiated after completion.'],['Payment Completed',false,'Payment confirmation will appear here.']];return <Card className="p-5"><div className="flex items-center justify-between"><div><h2 className="font-bold">Procurement Journey</h2><p className="mt-1 text-xs text-slate-500">Tap a stage for more information</p></div><Button variant="ghost" onClick={()=>setPage('schedule')}>Details <ArrowRight size={15}/></Button></div><div className="mt-5 grid gap-0 md:grid-cols-8">{stages.map(([name,done,desc],i)=><div key={name} className="relative flex gap-3 md:block"><div className="flex flex-col items-center md:flex-row"><div className={`z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-4 border-white ${done?'bg-green-600 text-white':'bg-slate-100 text-slate-400'}`}>{done?<CheckCircle2 size={18}/>:<span className="text-xs font-bold">{i+1}</span>}</div>{i<stages.length-1&&<div className={`h-10 w-0.5 md:h-1 md:w-full ${done?'bg-green-300':'bg-slate-100'}`}/>}</div><div className="pb-4 md:pr-2 md:pt-2"><p className={`text-xs font-bold ${done?'text-slate-800':'text-slate-400'}`}>{name}</p><p className="mt-1 hidden text-[10px] text-slate-500 md:block">{desc}</p></div></div>)}</div></Card>}
+function StatusTracker({setPage}:{setPage:(p:Page)=>void}){const stages=[['Registration Completed',true,'Your farmer registration is verified.'],['Token Generated',true,'Token #127 has been reserved.'],['Waiting for Procurement',true,'18 farmers are ahead of you.'],['Quality Verification',false,'Quality will be checked at the centre.'],['Weighing',false,'Weight will be recorded after verification.'],['Procurement Completed',false,'Procurement receipt will be generated.'],['Payment Processing',false,'Payment will be initiated after completion.'],['Payment Completed',false,'Payment confirmation will appear here.']];return <Card className="p-5"><div className="flex items-center justify-between"><div><h2 className="font-bold">Procurement Journey</h2><p className="mt-1 text-xs text-slate-500">Tap a stage for more information</p></div><Button variant="ghost" onClick={()=>setPage('schedule')}>Details <ArrowRight size={15}/></Button></div><div className="mt-5 grid gap-0 md:grid-cols-8">{stages.map(([name,done,desc],i)=><div key={String(name)} className="relative flex gap-3 md:block"><div className="flex flex-col items-center md:flex-row"><div className={`z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-4 border-white ${done?'bg-green-600 text-white':'bg-slate-100 text-slate-400'}`}>{done?<CheckCircle2 size={18}/>:<span className="text-xs font-bold">{i+1}</span>}</div>{i<stages.length-1&&<div className={`h-10 w-0.5 md:h-1 md:w-full ${done?'bg-green-300':'bg-slate-100'}`}/>}</div><div className="pb-4 md:pr-2 md:pt-2"><p className={`text-xs font-bold ${done?'text-slate-800':'text-slate-400'}`}>{name}</p><p className="mt-1 hidden text-[10px] text-slate-500 md:block">{desc}</p></div></div>)}</div></Card>}
 
 function Schedule({setPage}:{setPage:(p:Page)=>void}){const [filter,setFilter]=useState('Upcoming');const items=[{date:'25 Sep 2026',time:'11:30 AM',token:'#127',centre:'XYZ Procurement Centre',crop:'Wheat',qty:'50 Q',status:'Scheduled',tone:'green'},{date:'18 Sep 2026',time:'10:00 AM',token:'#098',centre:'XYZ Procurement Centre',crop:'Wheat',qty:'30 Q',status:'Completed',tone:'blue'},{date:'03 Sep 2026',time:'2:00 PM',token:'#071',centre:'Shakti Mandi Centre',crop:'Rice',qty:'20 Q',status:'Cancelled',tone:'red'}];const shown=items.filter(x=>filter==='Upcoming'?x.status==='Scheduled':filter==='Completed'?x.status==='Completed':x.status==='Cancelled');return <div className="space-y-5"><PageTitle title="My Schedule" subtitle="Your procurement appointments, reminders and history."/><Card className="p-4"><div className="flex flex-wrap gap-2">{['Upcoming','Completed','Cancelled'].map(f=><button key={f} onClick={()=>setFilter(f)} className={`rounded-xl px-4 py-2 text-sm font-semibold ${filter===f?'bg-green-700 text-white':'bg-slate-100 text-slate-600'}`}>{f}</button>)}</div></Card><div className="rounded-2xl border border-amber-200 bg-amber-50 p-4"><div className="flex gap-3"><Bell className="mt-0.5 text-amber-700" size={19}/><div><p className="font-bold text-amber-900">Reminder</p><p className="text-sm text-amber-800">Your wheat procurement is scheduled for 25 September at 11:30 AM.</p></div></div></div>{shown.map(x=><Card key={x.token} className="p-5"><div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"><div><div className="flex flex-wrap items-center gap-2"><h3 className="font-extrabold">{x.date} • {x.time}</h3><Badge tone={x.tone as any}>{x.status}</Badge></div><div className="mt-3 grid gap-2 text-sm text-slate-600 sm:grid-cols-2 lg:grid-cols-4"><span><b>Token:</b> {x.token}</span><span><b>Centre:</b> {x.centre}</span><span><b>Crop:</b> {x.crop}</span><span><b>Quantity:</b> {x.qty}</span></div></div><Button onClick={()=>setPage('home')} variant="secondary">Open status <ChevronRight size={16}/></Button></div></Card>)}</div>}
 
@@ -41,7 +41,12 @@ function TokenPage(){const [generated,setGenerated]=useState(false);return <div 
 
 function Centres(){const [sort,setSort]=useState('Nearest');const list=useMemo(()=>[...centres].sort((a,b)=>sort==='Lowest Queue'?a.queue-b.queue:sort==='Lowest Wait'?parseInt(a.wait)-parseInt(b.wait):parseFloat(a.distance)-parseFloat(b.distance)),[sort]);return <div className="space-y-5"><PageTitle title="Find Procurement Centre" subtitle="Choose a nearby centre using distance, queue and waiting time."/><Card className="overflow-hidden"><div className="grid min-h-[260px] place-items-center bg-gradient-to-br from-green-50 to-emerald-100"><div className="grid-dots absolute h-[260px] w-full opacity-50"/><div className="relative rounded-2xl border border-green-200 bg-white p-5 text-center shadow-lg"><MapPin className="mx-auto text-green-700" size={30}/><p className="mt-2 font-bold">Map view</p><p className="text-xs text-slate-500">Centre locations around your area</p></div></div></Card><div className="flex flex-wrap gap-2">{['Nearest','Lowest Queue','Lowest Wait'].map(x=><button key={x} onClick={()=>setSort(x)} className={`rounded-xl px-4 py-2 text-sm font-semibold ${sort===x?'bg-green-700 text-white':'bg-slate-100 text-slate-600'}`}>{x}</button>)}</div><div className="grid gap-4">{list.map(c=><Card key={c.name} className="p-5"><div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"><div><div className="flex flex-wrap items-center gap-2"><h3 className="font-extrabold">{c.name}</h3><Badge>● {c.status}</Badge></div><div className="mt-3 grid gap-2 text-sm text-slate-600 sm:grid-cols-2 lg:grid-cols-4"><span><b>Distance:</b> {c.distance}</span><span><b>Queue:</b> {c.queue} farmers</span><span><b>Wait:</b> {c.wait}</span><span><b>Capacity:</b> {c.capacity}%</span></div></div><div className="flex gap-2"><Button variant="secondary" icon={Compass}>View Details</Button><Button icon={Navigation}>Directions</Button></div></div></Card>)}</div></div>}
 
-function Notifications(){const ns=[['Your turn is approaching','You are 5 farmers away from your procurement turn.','2 min ago',Bell,'green'],['Schedule Reminder','Your wheat procurement is scheduled for tomorrow at 11:30 AM.','1 hr ago',CalendarDays,'amber'],['Procurement Update','Your quality verification has been completed.','Yesterday',PackageCheck,'blue'],['Centre Update','XYZ Centre currently has a waiting time of approximately 45 minutes.','Yesterday',MapPin,'gray']];return <div className="space-y-5"><PageTitle title="Notifications" subtitle="Stay informed about changes to your procurement."/><div className="grid gap-3">{ns.map(([title,body,time,I,tone])=><Card key={String(title)} className="p-4"><div className="flex gap-4"><div className={`mt-0.5 rounded-xl p-2.5 ${tone==='green'?'bg-green-50 text-green-700':tone==='amber'?'bg-amber-50 text-amber-700':tone==='blue'?'bg-blue-50 text-blue-700':'bg-slate-100 text-slate-600'}`}><I size={19}/></div><div className="flex-1"><div className="flex justify-between gap-3"><h3 className="font-bold">{title}</h3><span className="whitespace-nowrap text-xs text-slate-400">{time}</span></div><p className="mt-1 text-sm text-slate-600">{body}</p></div></div></Card>)}</div></div>}
+function Notifications(){const ns=[
+  ['Your turn is approaching','You are 5 farmers away from your procurement turn.','2 min ago',Bell,'green'],
+  ['Schedule Reminder','Your wheat procurement is scheduled for tomorrow at 11:30 AM.','1 hr ago',CalendarDays,'amber'],
+  ['Procurement Update','Your quality verification has been completed.','Yesterday',PackageCheck,'blue'],
+  ['Centre Update','XYZ Centre currently has a waiting time of approximately 45 minutes.','Yesterday',MapPin,'gray']
+] as const;return <div className="space-y-5"><PageTitle title="Notifications" subtitle="Stay informed about changes to your procurement."/><div className="grid gap-3">{ns.map(([title,body,time,I,tone])=><Card key={String(title)} className="p-4"><div className="flex gap-4"><div className={`mt-0.5 rounded-xl p-2.5 ${tone==='green'?'bg-green-50 text-green-700':tone==='amber'?'bg-amber-50 text-amber-700':tone==='blue'?'bg-blue-50 text-blue-700':'bg-slate-100 text-slate-600'}`}><I size={19}/></div><div className="flex-1"><div className="flex justify-between gap-3"><h3 className="font-bold">{title}</h3><span className="whitespace-nowrap text-xs text-slate-400">{time}</span></div><p className="mt-1 text-sm text-slate-600">{body}</p></div></div></Card>)}</div></div>}
 
 function Issues(){const [submitted,setSubmitted]=useState(false);return <div className="space-y-5"><PageTitle title="Report a Problem" subtitle="Tell the centre what went wrong. You can track the issue using your complaint ID."/><Card className="max-w-3xl p-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Issue category"><select><option>Long Waiting Time</option><option>Token Problem</option><option>Procurement Delay</option><option>Centre Issue</option><option>Payment Issue</option><option>Technical Problem</option><option>Other</option></select></Field><Field label="Token number"><input defaultValue="#127"/></Field></div><Field label="Description" className="mt-4"><textarea rows={5} placeholder="Describe the problem clearly..."/></Field><div className="mt-4 rounded-xl border border-dashed border-slate-300 p-5"><div className="flex items-center gap-3"><Upload className="text-slate-400"/><div><p className="text-sm font-semibold">Optional photo</p><p className="text-xs text-slate-500">Attach a photo if it helps explain the issue.</p></div></div></div><Button className="mt-5" onClick={()=>setSubmitted(true)} icon={FileWarning}>Submit Complaint</Button>{submitted&&<div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4"><p className="font-bold text-green-800">Complaint submitted</p><p className="mt-1 text-sm text-green-700">Complaint ID: <b>#CMP1024</b> • Status: Under Review</p></div>}</Card></div>}
 
@@ -52,13 +57,140 @@ function Analytics(){return <div className="space-y-5"><PageTitle title="Admin A
 function Why(){return <div className="space-y-5"><PageTitle title="Why KisanSetu?" subtitle="Our proposed solution focuses on integrating key procurement information into one farmer-centric experience."/><div className="grid gap-4 lg:grid-cols-2"><Card className="p-5"><div className="flex items-center gap-2"><MoreHorizontal className="text-slate-400"/><h2 className="font-bold">Typical fragmented experience</h2></div><ul className="mt-5 space-y-3 text-sm text-slate-600">{['Basic registration','Schedule information','Limited queue visibility','Manual status checking','Limited notifications','Farmer may need to wait at centre','Basic centre information'].map(x=><li key={x} className="flex gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-slate-300"/>{x}</li>)}</ul></Card><Card className="border-green-200 bg-green-50 p-5"><div className="flex items-center gap-2"><ShieldCheck className="text-green-700"/><h2 className="font-bold text-green-900">KisanSetu proposed experience</h2></div><ul className="mt-5 space-y-3 text-sm text-green-900">{['Personalized schedule','Live queue tracking','Estimated waiting time','Smart token management','Real-time procurement status','Timely notifications','Nearest / low-queue centre discovery','Issue reporting','Admin analytics'].map(x=><li key={x} className="flex gap-2"><CheckCircle2 size={17} className="shrink-0 text-green-700"/>{x}</li>)}</ul></Card></div><div className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-soft"><p className="text-sm font-semibold text-green-700">Core promise</p><p className="mt-2 text-xl font-extrabold text-slate-900 sm:text-2xl">“Know when to go, how long to wait, and what is happening with your procurement.”</p></div></div>}
 function PageTitle({title,subtitle}:{title:string,subtitle:string}){return <div><h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{title}</h1><p className="mt-1 text-sm text-slate-500">{subtitle}</p></div>}
 function Field({label,children,className=''}:{label:string,children:React.ReactNode,className?:string}){return <label className={`block ${className}`}><span className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</span><div className="[&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-slate-200 [&_input]:bg-white [&_input]:px-3 [&_input]:py-2.5 [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-slate-200 [&_select]:bg-white [&_select]:px-3 [&_select]:py-2.5 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-slate-200 [&_textarea]:px-3 [&_textarea]:py-2.5">{children}</div></label>}
-function Landing({onLogin,onRegister}:{onLogin:(r:Role)=>void,onRegister:()=>void}){return <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50"><header className="border-b border-slate-200 bg-white/90 backdrop-blur"><div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"><Logo/><button className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100"><Languages size={16} className="mr-1 inline"/> English / हिंदी</button></div></header><main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16"><div className="grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"><div><Badge>Smart India Hackathon • SIH 26032</Badge><h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-slate-900 sm:text-6xl">Procurement made simple for every farmer.</h1><p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">Know when to go, how long to wait, and what is happening with your procurement.</p><div className="mt-7 flex flex-col gap-3 sm:flex-row"><Button onClick={()=>onLogin('farmer')} icon={UserRound}>Farmer Login</Button><Button onClick={onRegister} variant="secondary" icon={ArrowRight}>Farmer Registration</Button><Button onClick={()=>onLogin('admin')} variant="ghost" icon={ShieldCheck}>Admin Login</Button></div><div className="mt-7 grid gap-3 sm:grid-cols-2"><div className="rounded-2xl border border-green-100 bg-white p-4 shadow-soft"><p className="font-bold text-slate-900">5-second dashboard</p><p className="mt-1 text-sm text-slate-500">Token, farmers ahead, wait time and current status at a glance.</p></div><div className="rounded-2xl border border-green-100 bg-white p-4 shadow-soft"><p className="font-bold text-slate-900">Built for rural users</p><p className="mt-1 text-sm text-slate-500">Large actions, simple language, responsive mobile-first design.</p></div></div></div><div className="rounded-3xl bg-green-800 p-5 text-white shadow-soft sm:p-7"><p className="text-sm font-semibold text-green-200">Ramesh Kumar • Demo farmer</p><div className="mt-5 rounded-2xl bg-white/10 p-5"><p className="text-sm text-green-100">Your procurement</p><p className="mt-1 text-3xl font-black">Token #127</p><div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Farmers ahead</p><p className="mt-1 text-xl font-bold">18</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Estimated wait</p><p className="mt-1 text-xl font-bold">45 min</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Date</p><p className="mt-1 text-sm font-bold">25 Sep 2026</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Crop</p><p className="mt-1 text-sm font-bold">Wheat</p></div></div></div><p className="mt-5 text-sm leading-6 text-green-100">One farmer-centric experience for schedules, smart tokens, live queues, centre discovery, notifications and issue reporting.</p></div></div><section className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[[CalendarDays,'Smart Scheduling','Know your procurement date and time.'],[Ticket,'Smart Token','Get your token and estimated turn.'],[Clock3,'Live Queue','Track farmers ahead and estimated waiting time.'],[PackageCheck,'Real-Time Status','Track procurement from registration to payment.']].map(([I,t,d])=><Card key={t as string} className="p-5"><div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-700"><I as any size={20}/></div><h3 className="font-bold text-slate-900">{t as string}</h3><p className="mt-1 text-sm leading-6 text-slate-500">{d as string}</p></Card>)}</section></main></div>}
+function Landing({onLogin,onRegister}:{onLogin:(r:Role)=>void,onRegister:()=>void}){return <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50"><header className="border-b border-slate-200 bg-white/90 backdrop-blur"><div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"><Logo/><button className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100"><Languages size={16} className="mr-1 inline"/> English / हिंदी</button></div></header><main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16"><div className="grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"><div><Badge>Smart India Hackathon • SIH 26032</Badge><h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-slate-900 sm:text-6xl">Procurement made simple for every farmer.</h1><p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">Know when to go, how long to wait, and what is happening with your procurement.</p><div className="mt-7 flex flex-col gap-3 sm:flex-row"><Button onClick={()=>onLogin('farmer')} icon={UserRound}>Farmer Login</Button><Button onClick={onRegister} variant="secondary" icon={ArrowRight}>Farmer Registration</Button><Button onClick={()=>onLogin('admin')} variant="ghost" icon={ShieldCheck}>Admin Login</Button></div><div className="mt-7 grid gap-3 sm:grid-cols-2"><div className="rounded-2xl border border-green-100 bg-white p-4 shadow-soft"><p className="font-bold text-slate-900">5-second dashboard</p><p className="mt-1 text-sm text-slate-500">Token, farmers ahead, wait time and current status at a glance.</p></div><div className="rounded-2xl border border-green-100 bg-white p-4 shadow-soft"><p className="font-bold text-slate-900">Built for rural users</p><p className="mt-1 text-sm text-slate-500">Large actions, simple language, responsive mobile-first design.</p></div></div></div><div className="rounded-3xl bg-green-800 p-5 text-white shadow-soft sm:p-7"><p className="text-sm font-semibold text-green-200">Ramesh Kumar • Demo farmer</p><div className="mt-5 rounded-2xl bg-white/10 p-5"><p className="text-sm text-green-100">Your procurement</p><p className="mt-1 text-3xl font-black">Token #127</p><div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Farmers ahead</p><p className="mt-1 text-xl font-bold">18</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Estimated wait</p><p className="mt-1 text-xl font-bold">45 min</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Date</p><p className="mt-1 text-sm font-bold">25 Sep 2026</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-xs text-green-100">Crop</p><p className="mt-1 text-sm font-bold">Wheat</p></div></div></div><p className="mt-5 text-sm leading-6 text-green-100">One farmer-centric experience for schedules, smart tokens, live queues, centre discovery, notifications and issue reporting.</p></div></div><section className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[[CalendarDays,'Smart Scheduling','Know your procurement date and time.'],[Ticket,'Smart Token','Get your token and estimated turn.'],[Clock3,'Live Queue','Track farmers ahead and estimated waiting time.'],[PackageCheck,'Real-Time Status','Track procurement from registration to payment.']].map(([I,t,d])=><Card key={t as string} className="p-5"><div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-700"><I size={20}/></div><h3 className="font-bold text-slate-900">{t as string}</h3><p className="mt-1 text-sm leading-6 text-slate-500">{d as string}</p></Card>)}</section></main></div>}
 
 function Login({onLogin}:{onLogin:(r:Role)=>void}){return <div className="grid min-h-[calc(100vh-64px)] place-items-center bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4"><Card className="w-full max-w-5xl overflow-hidden"><div className="grid md:grid-cols-2"><div className="hidden bg-green-800 p-10 text-white md:block"><Logo/><div className="mt-20"><p className="text-sm font-semibold text-green-200">Smart India Hackathon • 26032</p><h1 className="mt-3 text-4xl font-black leading-tight">Procurement made simple for every farmer.</h1><p className="mt-4 text-green-100">One place for schedules, tokens, live queues, centre information and procurement status.</p><div className="mt-8 space-y-3 text-sm text-green-50"><p>✓ Know when to go</p><p>✓ Know how long to wait</p><p>✓ Know what is happening</p></div></div></div><div className="p-6 sm:p-10"><div className="md:hidden"><Logo/></div><div className="mt-8 md:mt-0"><h2 className="text-2xl font-extrabold">Welcome to KisanSetu</h2><p className="mt-1 text-sm text-slate-500">Choose a demo role to explore the prototype.</p><div className="mt-6 space-y-3"><Button className="w-full justify-between" onClick={()=>onLogin('farmer')}>Farmer Login <ArrowRight size={17}/></Button><Button className="w-full justify-between" variant="secondary" onClick={()=>onLogin('admin')}>Admin Login <ArrowRight size={17}/></Button></div><div className="mt-6 rounded-xl bg-slate-50 p-4 text-xs text-slate-500"><b>Demo farmer:</b> Ramesh Kumar • Wheat • 50 Quintals • Token #127<br/><b>Demo centre:</b> XYZ Procurement Centre</div></div></div></div></Card></div>}
 
 function Registration({onBack,onLogin}:{onBack:()=>void,onLogin:(r:Role)=>void}){return <div className="grid min-h-screen place-items-center bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4"><Card className="w-full max-w-2xl p-6 sm:p-10"><Logo/><div className="mt-8"><button onClick={onBack} className="text-sm font-semibold text-green-700 hover:underline">← Back</button><h1 className="mt-4 text-2xl font-extrabold">Farmer Registration</h1><p className="mt-1 text-sm text-slate-500">Register a demo farmer profile for the SIH prototype.</p><div className="mt-6 grid gap-4 sm:grid-cols-2"><Field label="Full name"><input defaultValue="Ramesh Kumar"/></Field><Field label="Mobile number"><input defaultValue="+91 98XXXXXX42"/></Field><Field label="Village"><input defaultValue="Rampur"/></Field><Field label="Crop"><select><option>Wheat</option><option>Rice</option><option>Maize</option></select></Field><Field label="Quantity (Quintals)"><input type="number" defaultValue={50}/></Field><Field label="Preferred centre"><select><option>XYZ Procurement Centre</option><option>Shakti Mandi Centre</option></select></Field></div><Button className="mt-6 w-full" onClick={()=>onLogin('farmer')}>Register & Continue <ArrowRight size={17}/></Button></div></Card></div>}
 
-function App(){const [role,setRole]=useState<Role>('farmer');const [logged,setLogged]=useState(false);const [authView,setAuthView]=useState<'landing'|'login'|'register'>('landing');const [page,setPage]=useState<Page>('home');const content=role==='farmer'?({home:<Dashboard setPage={setPage}/>,schedule:<Schedule setPage={setPage}/>,token:<TokenPage/>,centres:<Centres/>,notifications:<Notifications/>,issues:<Issues/>,profile:<Profile/>,why:<Why/>}[page]??<Dashboard setPage={setPage}/>):({admin:<Admin setPage={setPage}/>,queue:<AdminQueue setPage={setPage}/>,analytics:<Analytics/>,centres:<Centres/>,issues:<Issues/>}[page]??<Admin setPage={setPage}/>);if(!logged){if(authView==='landing')return <Landing onLogin={r=>{setRole(r);setAuthView('login')}} onRegister={()=>setAuthView('register')}/>;if(authView==='register')return <Registration onBack={()=>setAuthView('landing')} onLogin={r=>{setRole(r);setLogged(true);setPage('home')}}/>;return <Login onLogin={r=>{setRole(r);setLogged(true);setPage(r==='farmer'?'home':'admin')}}/>}return <><Header role={role} setRole={r=>{setRole(r);setPage(r==='farmer'?'home':'admin')}} page={page} setPage={setPage}/><div className="mx-auto flex max-w-7xl"><Sidebar page={page} setPage={setPage} role={role} setRole={setRole}/><main className="min-w-0 flex-1 px-4 py-5 pb-24 sm:px-6 lg:pb-8">{content}</main></div><MobileNav page={page} setPage={setPage}/></>}
-function Profile(){return <div className="space-y-5"><PageTitle title="Profile" subtitle="Your farmer profile and notification preferences."/><Card className="max-w-2xl p-5"><div className="flex items-center gap-4"><div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-xl font-extrabold text-amber-800">RK</div><div><h2 className="text-xl font-extrabold">Ramesh Kumar</h2><p className="text-sm text-slate-500">Farmer ID • KS-10427</p></div></div><div className="mt-6 grid gap-4 sm:grid-cols-2"><Field label="Mobile"><input defaultValue="+91 98XXXXXX42"/></Field><Field label="Village"><input defaultValue="Rampur"/></Field><Field label="Preferred language"><select><option>English</option><option>हिंदी</option></select></Field><Field label="Notifications"><select><option>SMS + App</option><option>App only</option></select></Field></div></Card></div>}
+function Profile(){
+  return <div className="space-y-5">
+    <PageTitle title="Profile" subtitle="Your farmer profile and notification preferences."/>
+    <Card className="max-w-2xl p-5">
+      <div className="flex items-center gap-4">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-xl font-extrabold text-amber-800">RK</div>
+        <div>
+          <h2 className="text-xl font-extrabold">Ramesh Kumar</h2>
+          <p className="text-sm text-slate-500">Farmer ID • KS-10427</p>
+        </div>
+      </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <Field label="Mobile"><input defaultValue="+91 98XXXXXX42"/></Field>
+        <Field label="Village"><input defaultValue="Rampur"/></Field>
+        <Field label="Preferred language">
+          <select>
+            <option>English</option>
+            <option>हिंदी</option>
+          </select>
+        </Field>
+        <Field label="Notifications">
+          <select>
+            <option>SMS + App</option>
+            <option>App only</option>
+          </select>
+        </Field>
+      </div>
+    </Card>
+  </div>
+}
 
-createRoot(document.getElementById('root')!).render(<App/>);
+function App(){
+  const [role,setRole]=useState<Role>('farmer');
+  const [logged,setLogged]=useState(false);
+  const [authView,setAuthView]=useState<'landing'|'login'|'register'>('landing');
+  const [page,setPage]=useState<Page>('home');
+
+  const farmerContent: Partial<Record<Page,React.ReactNode>>={
+    home:<Dashboard setPage={setPage}/>,
+    schedule:<Schedule setPage={setPage}/>,
+    token:<TokenPage/>,
+    centres:<Centres/>,
+    notifications:<Notifications/>,
+    issues:<Issues/>,
+    profile:<Profile/>,
+    why:<Why/>
+  };
+
+  const adminContent: Partial<Record<Page,React.ReactNode>>={
+    admin:<Admin setPage={setPage}/>,
+    queue:<AdminQueue/>,
+    analytics:<Analytics/>,
+    centres:<Centres/>,
+    issues:<Issues/>
+  };
+
+  const content =
+    role==='farmer'
+      ? farmerContent[page] ?? <Dashboard setPage={setPage}/>
+      : adminContent[page] ?? <Admin setPage={setPage}/>;
+
+  if(!logged){
+    if(authView==='landing'){
+      return (
+        <Landing
+          onLogin={r=>{
+            setRole(r);
+            setAuthView('login');
+          }}
+          onRegister={()=>setAuthView('register')}
+        />
+      );
+    }
+
+    if(authView==='register'){
+      return (
+        <Registration
+          onBack={()=>setAuthView('landing')}
+          onLogin={r=>{
+            setRole(r);
+            setLogged(true);
+            setPage(r==='farmer'?'home':'admin');
+          }}
+        />
+      );
+    }
+
+    return (
+      <Login
+        onLogin={r=>{
+          setRole(r);
+          setLogged(true);
+          setPage(r==='farmer'?'home':'admin');
+        }}
+      />
+    );
+  }
+
+  return (
+    <>
+      <Header
+        role={role}
+        setRole={r=>{
+          setRole(r);
+          setPage(r==='farmer'?'home':'admin');
+        }}
+        page={page}
+        setPage={setPage}
+      />
+
+      <div className="mx-auto flex max-w-7xl">
+        <Sidebar
+          page={page}
+          setPage={setPage}
+          role={role}
+          setRole={setRole}
+        />
+
+        <main className="min-w-0 flex-1 px-4 py-5 pb-24 sm:px-6 lg:pb-8">
+          {content}
+        </main>
+      </div>
+
+      <MobileNav
+        page={page}
+        setPage={setPage}
+      />
+    </>
+  );
+}
+
